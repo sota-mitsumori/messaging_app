@@ -1,6 +1,6 @@
 import java.io.*;
 import java.net.*;
-
+//JabberServer.java
 public class JabberServer {
     public static final int PORT = 8080;
 
