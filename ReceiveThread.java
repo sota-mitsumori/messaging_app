@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class ReceiveThread extends Thread {
     private Socket socket;
@@ -11,9 +12,12 @@ public class ReceiveThread extends Thread {
     @Override
     public void run() {
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            // ★ ソケットの入力ストリームをUTF-8として読み込む
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+
             String line;
             while ((line = in.readLine()) != null) {
+                // ★ 出力側の文字化け対策（念のためPrintStreamにUTF-8指定）
                 System.out.println("相手: " + line);
             }
         } catch (IOException e) {
