@@ -15,8 +15,12 @@ public class SendThread extends Thread {
     public void run() {
         try {
             PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
-            // ★ System.inからの入力をUTF-8として読み込む
             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+
+            // ★ 名前を入力して最初に送信
+            System.out.print("What is your name? ");
+            String name = userInput.readLine();
+            out.println(name);  // 名前だけを1行目に送信
 
             String line;
             while ((line = userInput.readLine()) != null) {

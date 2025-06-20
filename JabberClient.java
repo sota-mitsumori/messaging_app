@@ -1,6 +1,6 @@
 import java.io.*;
 import java.net.*;
-//JabberClient.java
+
 public class JabberClient {
     public static void main(String[] args) throws IOException {
         InetAddress addr = InetAddress.getByName("localhost");
@@ -12,7 +12,5 @@ public class JabberClient {
 
         receiveThread.start();
         sendThread.start();
-
-        // スレッド終了待ちは省略
     }
 }
