@@ -1,6 +1,6 @@
 import java.io.*;
 import java.net.*;
-//JabberServer.java
+
 public class JabberServer {
     public static final int PORT = 8080;
 
@@ -16,9 +16,5 @@ public class JabberServer {
 
         receiveThread.start();
         sendThread.start();
-
-        // スレッド終了待ちは今回は省略
-
-        // サーバーソケットはクローズは必要に応じて
     }
 }
