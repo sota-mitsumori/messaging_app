@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import java.nio.charset.StandardCharsets;
 
 public class SendThread extends Thread {
@@ -22,9 +23,13 @@ public class SendThread extends Thread {
             String name = userInput.readLine();
             out.println(name);  // 名前だけを1行目に送信
 
+            // ★ タイムゾーンを明示的にTokyoに設定
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            sdf.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
+
             String line;
             while ((line = userInput.readLine()) != null) {
-                String timestamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                String timestamp = sdf.format(new Date());
                 out.println("[" + timestamp + "] " + line);
 
                 if ("bye".equalsIgnoreCase(line)) {
