@@ -18,7 +18,11 @@ public class ReceiveThread extends Thread {
             String line;
             while ((line = in.readLine()) != null) {
                 // ★ 出力側の文字化け対策（念のためPrintStreamにUTF-8指定）
-                System.out.println("相手: " + line);
+                if (line.startsWith("[")){
+                    System.out.println("\r相手: " + line);
+                } else {
+                    System.out.print("\r" + line + " ");
+                }
             }
         } catch (IOException e) {
             System.out.println("受信エラー: " + e.getMessage());

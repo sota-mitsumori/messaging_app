@@ -34,6 +34,7 @@ ehthumbs.db
 *.jar
 *.war
 *.ear
+!lib/*.jar
 
 # Maven
 pom.xml.tag
