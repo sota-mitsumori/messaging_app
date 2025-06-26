@@ -1,11 +1,8 @@
 import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
-<<<<<<< add-履歴
 import java.util.*;
-=======
-import java.util.Date;
->>>>>>> main
+
 import java.util.TimeZone;
 import java.nio.charset.StandardCharsets;
 
@@ -24,25 +21,15 @@ public class SendThread extends Thread {
             PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 
-<<<<<<< add-履歴
             System.out.print("What is your name? ");
             String name = userInput.readLine();
             out.println(name);
 
-=======
-            // ★ 名前を入力して最初に送信
-            System.out.print("What is your name? ");
-            String name = userInput.readLine();
-            out.println(name);  // 名前だけを1行目に送信
-
-            // ★ タイムゾーンを明示的にTokyoに設定
->>>>>>> main
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
             sdf.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo"));
 
             String line;
             while ((line = userInput.readLine()) != null) {
-<<<<<<< add-履歴
                 if ("list".equalsIgnoreCase(line)) {
                     System.out.println("--- メッセージ履歴 ---");
                     synchronized (messageHistory) {
@@ -56,9 +43,6 @@ public class SendThread extends Thread {
 
                 String timestamp = sdf.format(new Date());
                 String message = "You: [" + timestamp + "] " + line;
-=======
-                String timestamp = sdf.format(new Date());
->>>>>>> main
                 out.println("[" + timestamp + "] " + line);
 
                 synchronized (messageHistory) {
