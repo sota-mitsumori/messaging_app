@@ -1,6 +1,9 @@
 import java.io.*;
 import java.net.*;
+<<<<<<< add-履歴
 import java.util.*;
+=======
+>>>>>>> main
 
 public class JabberServer {
     public static final int PORT = 8080;
