@@ -18,7 +18,7 @@ public class SendThread extends Thread {
     public SendThread(Socket socket) throws IOException {
         this.socket = socket;
         this.out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
-        this.terminal = TerminalBuilder.builder().system(true).jna(true).encoding(StandardCharsets.UTF_8).build();
+        this.terminal = TerminalBuilder.builder().system(true).encoding(StandardCharsets.UTF_8).build();
     }
 
     @Override
@@ -52,6 +52,13 @@ public class SendThread extends Thread {
 
                 if (ch <= -1) continue;
 
+                else if (ch == 27) {
+                    while ((ch = reader.read(100)) > -1) {}
+                    continue;
+                    // 特殊キーの無視
+                    // 矢印キーにはあとで対応予定
+                }
+
                 lastTypingTime = System.currentTimeMillis();
 
                 if (ch == 10 || ch == 13) {
@@ -64,14 +71,13 @@ public class SendThread extends Thread {
                     terminal.flush();
 
                     if ("bye".equalsIgnoreCase(line)) {
-                        System.out.println("終了します...");
+                        System.out.println("\r終了します...");
                         socket.close();
                         break;
                     }
                 } else if (ch == 127 || ch == 8) {
                     if (inputBuffer.length() > 0) {
                         inputBuffer.deleteCharAt(inputBuffer.length() - 1);
-                        // terminal.puts(InfoCmp.Capability.cursor_left);
                         terminal.writer().print("\b \b");
                         terminal.flush();
                     }
