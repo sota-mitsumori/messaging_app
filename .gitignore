@@ -48,3 +48,7 @@ build/
 
 # 環境設定ファイル
 .env
+
+# Node
+node_modules/
+npm-debug.log
