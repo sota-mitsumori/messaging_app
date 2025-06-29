@@ -17,9 +17,11 @@ export default function Home() {
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [connectedUsers, setConnectedUsers] = useState([]);
+  const [typingUsers, setTypingUsers] = useState(new Set());
   const [ws, setWs] = useState(null);
   const messagesEndRef = useRef(null);
   const [showLogin, setShowLogin] = useState(true);
+  const typingTimeoutRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -28,6 +30,28 @@ export default function Home() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // 入力中の状態を管理
+  const handleInputChange = (e) => {
+    setNewMessage(e.target.value);
+    
+    // 入力中メッセージを送信
+    if (ws && isConnected) {
+      ws.send("TYPING:true");
+      
+      // 既存のタイマーをクリア
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      
+      // 3秒後に「入力中」を停止
+      typingTimeoutRef.current = setTimeout(() => {
+        if (ws && isConnected) {
+          ws.send("TYPING:false");
+        }
+      }, 3000);
+    }
+  };
 
   const connectWebSocket = (username) => {
     const websocket = new window.WebSocket("ws://localhost:8080");
@@ -76,6 +100,20 @@ export default function Home() {
             setConnectedUsers(userList);
           }
           break;
+        case "TYPING":
+          if (data) {
+            const [typingUser, isTyping] = data.split(",", 2);
+            setTypingUsers(prev => {
+              const newSet = new Set(prev);
+              if (isTyping === "true") {
+                newSet.add(typingUser);
+              } else {
+                newSet.delete(typingUser);
+              }
+              return newSet;
+            });
+          }
+          break;
         default:
           console.log("Unknown message type:", type);
       }
@@ -87,6 +125,7 @@ export default function Home() {
       setUsername("");
       setMessages([]);
       setConnectedUsers([]);
+      setTypingUsers(new Set());
     };
     websocket.onerror = (error) => {
       console.error("WebSocket error:", error);
@@ -107,6 +146,12 @@ export default function Home() {
     console.log("Sending message:", newMessage);
     ws.send(`MESSAGE:${newMessage}`);
     setNewMessage("");
+    
+    // メッセージ送信時に「入力中」を停止
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    ws.send("TYPING:false");
   };
 
   const handleKeyPress = (e) => {
@@ -216,6 +261,14 @@ export default function Home() {
                     <span className="text-gray-600">{message}</span>
                   </div>
                 ))}
+                
+                {/* 入力中表示 */}
+                {typingUsers.size > 0 && (
+                  <div className="text-sm text-gray-500 italic">
+                    {Array.from(typingUsers).join(", ")} {typingUsers.size === 1 ? "is" : "are"} typing...
+                  </div>
+                )}
+                
                 <div ref={messagesEndRef} />
               </div>
 
@@ -224,7 +277,7 @@ export default function Home() {
                 <div className="flex space-x-2">
                   <textarea
                     value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
+                    onChange={handleInputChange}
                     onKeyPress={handleKeyPress}
                     placeholder="Type your message..."
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"

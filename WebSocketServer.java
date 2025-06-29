@@ -175,6 +175,16 @@ public class WebSocketServer {
                             }
                         }
                         break;
+                    case "TYPING":
+                        if (username != null) {
+                            // 他のユーザーに「入力中」状態を送信
+                            for (WebSocketConnection conn : connections) {
+                                if (conn != this && conn.isWebSocket) {
+                                    conn.sendWebSocketMessage("TYPING:" + username + "," + data);
+                                }
+                            }
+                        }
+                        break;
                     case "DISCONNECT":
                         if (username != null) {
                             connectedUsers.remove(username);
