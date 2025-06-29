@@ -154,6 +154,13 @@ public class WebSocketServer {
                         sendWebSocketMessage("CONNECTED:" + username);
                         sendWebSocketMessage("MESSAGES:" + String.join("\n", messageHistory));
                         sendWebSocketMessage("USERS:" + String.join(",", connectedUsers));
+                        
+                        // 全員にユーザーリストの更新を送信
+                        for (WebSocketConnection conn : connections) {
+                            if (conn.isWebSocket) {
+                                conn.sendWebSocketMessage("USERS:" + String.join(",", connectedUsers));
+                            }
+                        }
                         break;
                     case "MESSAGE":
                         if (username != null) {
@@ -174,6 +181,13 @@ public class WebSocketServer {
                             String leaveMsg = "System: [" + sdf.format(new Date()) + "] " + username + " left the chat";
                             synchronized (messageHistory) { messageHistory.add(leaveMsg); }
                             broadcastMessage(leaveMsg);
+                            
+                            // 全員にユーザーリストの更新を送信
+                            for (WebSocketConnection conn : connections) {
+                                if (conn.isWebSocket) {
+                                    conn.sendWebSocketMessage("USERS:" + String.join(",", connectedUsers));
+                                }
+                            }
                         }
                         break;
                 }
@@ -220,6 +234,13 @@ public class WebSocketServer {
                 String leaveMsg = "System: [" + sdf.format(new Date()) + "] " + username + " left the chat";
                 synchronized (messageHistory) { messageHistory.add(leaveMsg); }
                 broadcastMessage(leaveMsg);
+                
+                // 全員にユーザーリストの更新を送信
+                for (WebSocketConnection conn : connections) {
+                    if (conn.isWebSocket) {
+                        conn.sendWebSocketMessage("USERS:" + String.join(",", connectedUsers));
+                    }
+                }
             }
             connections.remove(this);
             try { if (socket != null && !socket.isClosed()) { socket.close(); } } catch (IOException e) {}
