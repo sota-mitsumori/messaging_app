@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
-//JabberServer.java
+import java.util.*;
+
 public class JabberServer {
     public static final int PORT = 8080;
 
@@ -11,14 +12,12 @@ public class JabberServer {
         Socket socket = serverSocket.accept();
         System.out.println("クライアント接続: " + socket);
 
-        ReceiveThread receiveThread = new ReceiveThread(socket);
-        SendThread sendThread = new SendThread(socket);
+        List<String> messageHistory = new ArrayList<>(); // ★共通履歴
+
+        ReceiveThread receiveThread = new ReceiveThread(socket, messageHistory);
+        SendThread sendThread = new SendThread(socket, messageHistory);
 
         receiveThread.start();
         sendThread.start();
-
-        // スレッド終了待ちは今回は省略
-
-        // サーバーソケットはクローズは必要に応じて
     }
 }

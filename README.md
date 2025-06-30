@@ -8,3 +8,5 @@ vscode上のターミナルでは日本語が文字化けするので各自の�
 JLineを導入した関係でコンパイル・実行時のコマンドは以下を使うようにお願いします
 javac -cp ".;lib/jline-3.30.4.jar" *.java
 java -cp ".;lib/jline-3.30.4.jar" JabberServer
+  
+listと入力すると履歴が表示されます
