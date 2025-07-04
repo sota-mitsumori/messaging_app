@@ -1,5 +1,4 @@
 # Socket Chat Application
-
 ソケット通信を使用したリアルタイムチャットアプリケーション（Javaバックエンド + Next.jsフロントエンド）
 
 ## 概要
@@ -195,3 +194,16 @@ Adding broadcast message: username: [HH:mm:ss] message
 - **ルーム機能**: 複数のチャットルーム
 - **認証システム**: ユーザー認証の実装
 - **メッセージ永続化**: データベースへの保存
+
+## 実行時の注意
+vscode上のターミナルでは日本語が文字化けするので各自のコマンドプロンプトで実行してください
+
+## コンパイル・実行方法
+JLineを導入した関係でJabberServer.javaおよびJabberClient.javaのコンパイル・実行時のコマンドは以下を使うようにお願いします
+
+```
+javac -cp ".;lib/jline-3.30.4.jar" *.java\
+java -cp ".;lib/jline-3.30.4.jar" JabberServer
+```
+
+listと入力すると履歴が表示されます

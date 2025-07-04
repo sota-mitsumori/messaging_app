@@ -28,13 +28,13 @@ public class ReceiveThread extends Thread {
 
             String line;
             while ((line = in.readLine()) != null) {
+
                 String msg = partnerName + ": " + line;
                 System.out.println(msg);
                 synchronized (messageHistory) {
                     messageHistory.add(msg);
                 }
             //System.out.println("相手の名前: " + partnerName);
-
             }
         } catch (IOException e) {
             System.out.println("受信エラー: " + e.getMessage());
