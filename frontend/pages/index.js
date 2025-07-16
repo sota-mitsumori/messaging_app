@@ -45,7 +45,8 @@ const MessageItem = ({ msg, myUsername, onVisible }) => {
       <div className={`max-w-[70%] p-3 rounded-2xl ${isSelf ? 'bg-blue-500 text-white rounded-br-md' : 'bg-gray-200 text-black rounded-bl-md'}`}>
         <p className="text-sm break-words">{msg.text}</p>
       </div>
-       {isSelf && readByCount > 0 && (
+      <div className="text-xs text-gray-400 mt-1 px-2">{msg.timestamp}</div>
+      {isSelf && readByCount > 0 && (
         <div className="text-xs text-blue-600 mt-1 pr-1">
           既読 {readByCount}
         </div>
@@ -107,15 +108,15 @@ export default function Home() {
           setShowLogin(false);
           break;
         case "NEW_MESSAGE": {
-          const [id, content] = data.split('::');
-          const [senderInfo, ...msgParts] = content.split(': ');
-          const text = msgParts.join(': ');
-          const sender = senderInfo.split(' ')[0];
-
-          setMessages(prev => {
-            if (prev.some(msg => msg.id === id)) return prev;
-            return [...prev, { id, sender, text, readBy: [] }];
-          });
+          const parts = data.split('::');
+          if (parts.length >= 4) {
+            const [id, sender, timestamp, ...textParts] = parts;
+            const text = textParts.join('::');
+            setMessages(prev => {
+              if (prev.some(msg => msg.id === id)) return prev;
+              return [...prev, { id, sender, text, timestamp, readBy: [] }];
+            });
+          }
           break;
         }
         case "READ_UPDATE": {

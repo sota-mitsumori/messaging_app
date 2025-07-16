@@ -151,7 +151,7 @@ public class WebSocketServer {
                             broadcastReadUpdate(entry.getKey(), entry.getValue());
                         }
                     }
-                    String joinMsg = "System: [" + sdf.format(new Date()) + "] " + username + " joined the chat";
+                    String joinMsg = username + " joined the chat";
                     broadcastSystemMessage(joinMsg);
                     broadcastUserList();
                     break;
@@ -159,8 +159,8 @@ public class WebSocketServer {
                 case "MESSAGE":
                     if (username != null) {
                         String messageId = UUID.randomUUID().toString();
-                        String chatMsg = username + ": [" + sdf.format(new Date()) + "] " + data;
-                        
+                        String timestamp = sdf.format(new Date());
+                        String chatMsg = username + "::" + timestamp + "::" + data;
                         synchronized (messageHistory) {
                             messageHistory.put(messageId, chatMsg);
                         }
@@ -244,10 +244,12 @@ public class WebSocketServer {
         
         private void broadcastSystemMessage(String text) {
             String messageId = UUID.randomUUID().toString();
+            String timestamp = sdf.format(new Date());
+            String systemMsg = "System::" + timestamp + "::" + text;
             synchronized (messageHistory) {
-                messageHistory.put(messageId, text);
+                messageHistory.put(messageId, systemMsg);
             }
-            broadcastMessage("NEW_MESSAGE:" + messageId + "::" + text);
+            broadcastMessage("NEW_MESSAGE:" + messageId + "::" + systemMsg);
         }
 
         private void broadcastMessage(String message) {
