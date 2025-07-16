@@ -33,6 +33,9 @@ const MessageItem = ({ msg, myUsername, onVisible }) => {
     return (
       <div className="text-sm text-gray-500 text-center py-2">
         {msg.text}
+        {msg.timestamp && (
+          <div className="text-xs text-gray-400 mt-1">{msg.timestamp}</div>
+        )}
       </div>
     );
   }

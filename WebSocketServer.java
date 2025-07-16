@@ -151,7 +151,7 @@ public class WebSocketServer {
                             broadcastReadUpdate(entry.getKey(), entry.getValue());
                         }
                     }
-                    String joinMsg = username + " joined the chat";
+                    String joinMsg = "System: " + username + " joined the chat";
                     broadcastSystemMessage(joinMsg);
                     broadcastUserList();
                     break;
@@ -198,7 +198,7 @@ public class WebSocketServer {
             if (username != null) {
                 connectedUsers.remove(username);
                 System.out.println(username + " left.");
-                String leaveMsg = "System: [" + sdf.format(new Date()) + "] " + username + " left the chat";
+                String leaveMsg = "System: " + username + " left the chat";
                 broadcastSystemMessage(leaveMsg);
                 broadcastUserList();
                 username = null;
